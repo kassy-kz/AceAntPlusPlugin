@@ -133,7 +133,7 @@ public class Activity_MultiDeviceSearchSampler extends Activity
                 // need to request access through both, but best practice is to request one after another
                 break;
             case HEARTRATE:
-                activity = Activity_SearchUiHeartRateSampler.class;
+                activity = Activity_HeartRateDisplay.class;
                 break;
             case UNKNOWN:
                 break;

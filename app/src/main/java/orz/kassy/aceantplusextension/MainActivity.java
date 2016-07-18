@@ -6,11 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import orz.kassy.aceantplusextension.antplus.Activity_BikeCadenceSampler;
 import orz.kassy.aceantplusextension.antplus.Activity_BikeSpeedDistanceSampler;
-import orz.kassy.aceantplusextension.antplus.Activity_SearchUiHeartRateSampler;
+import orz.kassy.aceantplusextension.antplus.Activity_HeartRateDisplay;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -26,25 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn2.setOnClickListener(this);
         View btn3 = findViewById(R.id.btn3);
         btn3.setOnClickListener(this);
-    }
-
-    @OnClick(R.id.btn1)
-    public void onClickButton1() {
-        Log.i(TAG, "btn1");
-        Intent intent = new Intent(this, Activity_BikeCadenceSampler.class);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.btn2)
-    public void onClickButton2() {
-        Intent intent = new Intent(this, Activity_BikeSpeedDistanceSampler.class);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.btn3)
-    public void onClickButton3() {
-        Intent intent = new Intent(this, Activity_SearchUiHeartRateSampler.class);
-        startActivity(intent);
     }
 
     @Override
@@ -64,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             }
             case R.id.btn3: {
-                Intent intent = new Intent(this, Activity_SearchUiHeartRateSampler.class);
+                Intent intent = new Intent(this, Activity_HeartRateDisplay.class);
                 startActivity(intent);
 
                 break;

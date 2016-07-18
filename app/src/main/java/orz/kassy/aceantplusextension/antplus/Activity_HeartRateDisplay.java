@@ -35,6 +35,7 @@ import com.dsi.ant.plugins.antplus.pccbase.AntPlusCommonPcc.IRssiReceiver;
 import com.dsi.ant.plugins.antplus.pccbase.AntPlusLegacyCommonPcc.ICumulativeOperatingTimeReceiver;
 import com.dsi.ant.plugins.antplus.pccbase.AntPlusLegacyCommonPcc.IManufacturerAndSerialReceiver;
 import com.dsi.ant.plugins.antplus.pccbase.AntPlusLegacyCommonPcc.IVersionAndModelReceiver;
+import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch;
 import com.dsi.ant.plugins.antplus.pccbase.PccReleaseHandle;
 
 import java.math.BigDecimal;
@@ -42,11 +43,21 @@ import java.util.EnumSet;
 import orz.kassy.aceantplusextension.R;
 
 
-/**
- * Base class to connects to Heart Rate Plugin and display all the event data.
- */
-public abstract class Activity_HeartRateDisplayBase extends Activity {
-    protected abstract void requestAccessToPcc();
+public class Activity_HeartRateDisplay extends Activity {
+    private void requestAccessToPcc() {
+        Intent intent = getIntent();
+        if (intent.hasExtra(Activity_MultiDeviceSearchSampler.EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT)) {
+            // device has already been selected through the multi-device search
+            MultiDeviceSearch.MultiDeviceSearchResult result = intent
+                    .getParcelableExtra(Activity_MultiDeviceSearchSampler.EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT);
+            releaseHandle = AntPlusHeartRatePcc.requestAccess(this, result.getAntDeviceNumber(), 0,
+                    base_IPluginAccessResultReceiver, base_IDeviceStateChangeReceiver);
+        } else {
+            // starts the plugins UI search
+            releaseHandle = AntPlusHeartRatePcc.requestAccess(this, this,
+                    base_IPluginAccessResultReceiver, base_IDeviceStateChangeReceiver);
+        }
+    }
 
     AntPlusHeartRatePcc hrPcc = null;
     protected PccReleaseHandle<AntPlusHeartRatePcc> releaseHandle = null;
@@ -81,6 +92,7 @@ public abstract class Activity_HeartRateDisplayBase extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        showDataDisplay("Connecting...");
 
         handleReset();
     }
@@ -179,6 +191,7 @@ public abstract class Activity_HeartRateDisplayBase extends Activity {
                     public void run() {
                         tv_estTimestamp.setText(String.valueOf(estTimestamp));
 
+                        // 書き込みメイン機能
                         tv_computedHeartRate.setText(textHeartRate);
                         tv_heartBeatCounter.setText(textHeartBeatCount);
                         tv_heartBeatEventTime.setText(textHeartBeatEventTime);
@@ -303,25 +316,25 @@ public abstract class Activity_HeartRateDisplayBase extends Activity {
                             if (!result.supportsRssi()) tv_rssi.setText("N/A");
                             break;
                         case CHANNEL_NOT_AVAILABLE:
-                            Toast.makeText(Activity_HeartRateDisplayBase.this, "Channel Not Available", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Activity_HeartRateDisplay.this, "Channel Not Available", Toast.LENGTH_SHORT).show();
                             tv_status.setText("Error. Do Menu->Reset.");
                             break;
                         case ADAPTER_NOT_DETECTED:
-                            Toast.makeText(Activity_HeartRateDisplayBase.this, "ANT Adapter Not Available. Built-in ANT hardware or external adapter required.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Activity_HeartRateDisplay.this, "ANT Adapter Not Available. Built-in ANT hardware or external adapter required.", Toast.LENGTH_SHORT).show();
                             tv_status.setText("Error. Do Menu->Reset.");
                             break;
                         case BAD_PARAMS:
                             //Note: Since we compose all the params ourself, we should never see this result
-                            Toast.makeText(Activity_HeartRateDisplayBase.this, "Bad request parameters.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Activity_HeartRateDisplay.this, "Bad request parameters.", Toast.LENGTH_SHORT).show();
                             tv_status.setText("Error. Do Menu->Reset.");
                             break;
                         case OTHER_FAILURE:
-                            Toast.makeText(Activity_HeartRateDisplayBase.this, "RequestAccess failed. See logcat for details.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Activity_HeartRateDisplay.this, "RequestAccess failed. See logcat for details.", Toast.LENGTH_SHORT).show();
                             tv_status.setText("Error. Do Menu->Reset.");
                             break;
                         case DEPENDENCY_NOT_INSTALLED:
                             tv_status.setText("Error. Do Menu->Reset.");
-                            AlertDialog.Builder adlgBldr = new AlertDialog.Builder(Activity_HeartRateDisplayBase.this);
+                            AlertDialog.Builder adlgBldr = new AlertDialog.Builder(Activity_HeartRateDisplay.this);
                             adlgBldr.setTitle("Missing Dependency");
                             adlgBldr.setMessage("The required service\n\"" + AntPlusHeartRatePcc.getMissingDependencyName() + "\"\n was not found. You need to install the ANT+ Plugins service or you may need to update your existing version if you already have it. Do you want to launch the Play Store to get it?");
                             adlgBldr.setCancelable(true);
@@ -332,7 +345,7 @@ public abstract class Activity_HeartRateDisplayBase extends Activity {
                                     startStore = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + AntPlusHeartRatePcc.getMissingDependencyPackageName()));
                                     startStore.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                                    Activity_HeartRateDisplayBase.this.startActivity(startStore);
+                                    Activity_HeartRateDisplay.this.startActivity(startStore);
                                 }
                             });
                             adlgBldr.setNegativeButton("Cancel", new OnClickListener() {
@@ -349,13 +362,13 @@ public abstract class Activity_HeartRateDisplayBase extends Activity {
                             tv_status.setText("Cancelled. Do Menu->Reset.");
                             break;
                         case UNRECOGNIZED:
-                            Toast.makeText(Activity_HeartRateDisplayBase.this,
+                            Toast.makeText(Activity_HeartRateDisplay.this,
                                     "Failed: UNRECOGNIZED. PluginLib Upgrade Required?",
                                     Toast.LENGTH_SHORT).show();
                             tv_status.setText("Error. Do Menu->Reset.");
                             break;
                         default:
-                            Toast.makeText(Activity_HeartRateDisplayBase.this, "Unrecognized result: " + resultCode, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Activity_HeartRateDisplay.this, "Unrecognized result: " + resultCode, Toast.LENGTH_SHORT).show();
                             tv_status.setText("Error. Do Menu->Reset.");
                             break;
                     }
