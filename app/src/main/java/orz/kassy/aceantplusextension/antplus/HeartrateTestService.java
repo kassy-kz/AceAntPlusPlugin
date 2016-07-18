@@ -49,8 +49,12 @@ public class HeartrateTestService extends Service {
             // device has already been selected through the multi-device search
             MultiDeviceSearch.MultiDeviceSearchResult result = intent
                     .getParcelableExtra(Activity_MultiDeviceSearchSampler.EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT);
+            // 実験
             releaseHandle = AntPlusHeartRatePcc.requestAccess(this, result.getAntDeviceNumber(), 0,
                     base_IPluginAccessResultReceiver, base_IDeviceStateChangeReceiver);
+//            releaseHandle = AntPlusHeartRatePcc.requestAccess(this, 23756, 0,
+//                    base_IPluginAccessResultReceiver, base_IDeviceStateChangeReceiver);
+            Log.i(TAG, "result : " + result.getDeviceDisplayName() + ", " + result.getAntDeviceType() + ", " + result.getAntDeviceNumber());
         } else {
             Log.w(TAG, "errorrrrrrrrrrr");
         }
