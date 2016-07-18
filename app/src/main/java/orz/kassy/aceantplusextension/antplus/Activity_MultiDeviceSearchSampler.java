@@ -125,9 +125,13 @@ public class Activity_MultiDeviceSearchSampler extends Activity {
                 // could also start with Activity_BikeCadenceSampler
                 // need to request access through both, but best practice is to request one after another
                 break;
-            case HEARTRATE:
-                activity = Activity_HeartRateDisplay.class;
+            case HEARTRATE: {
+//                activity = Activity_HeartRateDisplay.class;
+                Intent intent = new Intent(this, HeartrateTestService.class);
+                intent.putExtra(EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT, result);
+                startService(intent);
                 break;
+            }
             case UNKNOWN:
                 break;
             default:
