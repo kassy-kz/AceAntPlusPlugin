@@ -10,6 +10,8 @@ import butterknife.OnClick;
 import orz.kassy.aceantplusextension.antplus.Activity_BikeCadenceSampler;
 import orz.kassy.aceantplusextension.antplus.Activity_BikeSpeedDistanceSampler;
 import orz.kassy.aceantplusextension.antplus.Activity_HeartRateDisplay;
+import orz.kassy.aceantplusextension.antplus.Activity_MultiDeviceFilter;
+import orz.kassy.aceantplusextension.antplus.Activity_MultiDeviceSearchSampler;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -25,6 +27,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn2.setOnClickListener(this);
         View btn3 = findViewById(R.id.btn3);
         btn3.setOnClickListener(this);
+
+        View btn4 = findViewById(R.id.btn4);
+        btn4.setOnClickListener(this);
+        View btn5 = findViewById(R.id.btn5);
+        btn5.setOnClickListener(this);
     }
 
     @Override
@@ -45,6 +52,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
             case R.id.btn3: {
                 Intent intent = new Intent(this, Activity_HeartRateDisplay.class);
+                startActivity(intent);
+
+                break;
+            }
+            case R.id.btn4: {
+                Intent intent = new Intent(this, Activity_MultiDeviceFilter.class);
+                startActivity(intent);
+
+                break;
+            }
+            case R.id.btn5: {
+                Intent intent = new Intent(this, Activity_MultiDeviceSearchSampler.class);
                 startActivity(intent);
 
                 break;

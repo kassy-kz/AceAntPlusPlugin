@@ -29,6 +29,8 @@
         <activity android:name=".antplus.Activity_BikeSpeedDistanceSampler"/>
         <activity android:name=".antplus.Activity_BikeCadenceSampler"/>
         <activity android:name=".antplus.Activity_HeartRateDisplay"/>
+        <activity android:name=".antplus.Activity_MultiDeviceFilter"/>
+        <activity android:name=".antplus.Activity_MultiDeviceSearchSampler"/>
     </application>
 
 </manifest>

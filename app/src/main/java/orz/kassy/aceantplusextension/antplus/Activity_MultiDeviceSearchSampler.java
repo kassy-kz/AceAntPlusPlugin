@@ -19,11 +19,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.dsi.ant.plugins.antplus.pcc.MultiDeviceSearch;
 import com.dsi.ant.plugins.antplus.pcc.MultiDeviceSearch.RssiSupport;
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType;
 import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult;
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult;
+
 import orz.kassy.aceantplusextension.R;
 
 import java.util.ArrayList;
@@ -33,16 +35,15 @@ import java.util.EnumSet;
  * Searches for multiple devices on the same channel using the multi-device
  * search interface
  */
-public class Activity_MultiDeviceSearchSampler extends Activity
-{
+public class Activity_MultiDeviceSearchSampler extends Activity {
     /**
      * Relates a MultiDeviceSearchResult with an RSSI value
      */
-    public class MultiDeviceSearchResultWithRSSI
-    {
+    public class MultiDeviceSearchResultWithRSSI {
         public MultiDeviceSearchResult mDevice;
         public int mRSSI = Integer.MIN_VALUE;
     }
+
     public static final String EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT = "com.dsi.ant.antplus.pluginsampler.multidevicesearch.result";
     public static final String BUNDLE_KEY = "com.dsi.ant.antplus.pluginsampler.multidevicesearch.bundle";
     public static final String FILTER_KEY = "com.dsi.ant.antplus.pluginsampler.multidevicesearch.filter";
@@ -62,8 +63,7 @@ public class Activity_MultiDeviceSearchSampler extends Activity
     MultiDeviceSearch mSearch;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multidevice_scan);
 
@@ -75,11 +75,9 @@ public class Activity_MultiDeviceSearchSampler extends Activity
         mFoundAdapter = new ArrayAdapter_MultiDeviceSearchResult(this, mFoundDevices);
         mFoundDevicesList.setAdapter(mFoundAdapter);
 
-        mFoundDevicesList.setOnItemClickListener(new OnItemClickListener()
-        {
+        mFoundDevicesList.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 launchConnection(mFoundAdapter.getItem(position).mDevice);
             }
         });
@@ -89,11 +87,9 @@ public class Activity_MultiDeviceSearchSampler extends Activity
         mConnectedAdapter = new ArrayAdapter_MultiDeviceSearchResult(this, mConnectedDevices);
         mConnectedDevicesList.setAdapter(mConnectedAdapter);
 
-        mConnectedDevicesList.setOnItemClickListener(new OnItemClickListener()
-        {
+        mConnectedDevicesList.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 launchConnection(mConnectedAdapter.getItem(position).mDevice);
             }
         });
@@ -108,19 +104,16 @@ public class Activity_MultiDeviceSearchSampler extends Activity
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         super.onDestroy();
 
         // close and clean-up the multi-device search
         mSearch.close();
     }
 
-    public void launchConnection(MultiDeviceSearchResult result)
-    {
+    public void launchConnection(MultiDeviceSearchResult result) {
         Class activity = null;
-        switch (result.getAntDeviceType())
-        {
+        switch (result.getAntDeviceType()) {
             case BIKE_CADENCE:
                 activity = Activity_BikeCadenceSampler.class;
                 break;
@@ -140,8 +133,7 @@ public class Activity_MultiDeviceSearchSampler extends Activity
             default:
                 break;
         }
-        if (activity != null)
-        {
+        if (activity != null) {
             Intent intent = new Intent(this, activity);
             intent.putExtra(EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT, result);
             startActivity(intent);
@@ -152,14 +144,12 @@ public class Activity_MultiDeviceSearchSampler extends Activity
     /**
      * Callbacks from the multi-device search interface
      */
-    private MultiDeviceSearch.SearchCallbacks mCallback = new MultiDeviceSearch.SearchCallbacks()
-    {
+    private MultiDeviceSearch.SearchCallbacks mCallback = new MultiDeviceSearch.SearchCallbacks() {
         /**
          * Called when a device is found. Display found devices in connected and
          * found lists
          */
-        public void onDeviceFound(final MultiDeviceSearchResult deviceFound)
-        {
+        public void onDeviceFound(final MultiDeviceSearchResult deviceFound) {
             final MultiDeviceSearchResultWithRSSI result = new MultiDeviceSearchResultWithRSSI();
             result.mDevice = deviceFound;
 
@@ -167,17 +157,13 @@ public class Activity_MultiDeviceSearchSampler extends Activity
             // un-connected devices to make this information more visible to the
             // user, since the user most likely wants to be aware of which
             // device they are already using in another app
-            if (deviceFound.isAlreadyConnected())
-            {
-                runOnUiThread(new Runnable()
-                {
+            if (deviceFound.isAlreadyConnected()) {
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void run()
-                    {
+                    public void run() {
                         // connected device category is invisible unless there
                         // are some present
-                        if (mConnectedAdapter.isEmpty())
-                        {
+                        if (mConnectedAdapter.isEmpty()) {
                             findViewById(R.id.textView_AlreadyConnectedTitle).setVisibility(
                                     View.VISIBLE);
                             mConnectedDevicesList.setVisibility(View.VISIBLE);
@@ -187,14 +173,10 @@ public class Activity_MultiDeviceSearchSampler extends Activity
                         mConnectedAdapter.notifyDataSetChanged();
                     }
                 });
-            }
-            else
-            {
-                runOnUiThread(new Runnable()
-                {
+            } else {
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void run()
-                    {
+                    public void run() {
                         mFoundAdapter.add(result);
                         mFoundAdapter.notifyDataSetChanged();
                     }
@@ -205,8 +187,7 @@ public class Activity_MultiDeviceSearchSampler extends Activity
         /**
          * The search has been stopped unexpectedly
          */
-        public void onSearchStopped(RequestAccessResult reason)
-        {
+        public void onSearchStopped(RequestAccessResult reason) {
             Intent result = new Intent();
             result.putExtra(EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT, reason.getIntValue());
             setResult(RESULT_SEARCH_STOPPED, result);
@@ -215,11 +196,9 @@ public class Activity_MultiDeviceSearchSampler extends Activity
 
         @Override
         public void onSearchStarted(RssiSupport supportsRssi) {
-            if(supportsRssi == RssiSupport.UNAVAILABLE)
-            {
+            if (supportsRssi == RssiSupport.UNAVAILABLE) {
                 Toast.makeText(mContext, "Rssi information not available.", Toast.LENGTH_SHORT).show();
-            } else if(supportsRssi == RssiSupport.UNKNOWN_OLDSERVICE)
-            {
+            } else if (supportsRssi == RssiSupport.UNKNOWN_OLDSERVICE) {
                 Toast.makeText(mContext, "Rssi might be supported. Please upgrade the plugin service.", Toast.LENGTH_SHORT).show();
             }
         }
@@ -228,23 +207,17 @@ public class Activity_MultiDeviceSearchSampler extends Activity
     /**
      * Callback for RSSI data of previously found devices
      */
-    private MultiDeviceSearch.RssiCallback mRssiCallback = new MultiDeviceSearch.RssiCallback()
-    {
+    private MultiDeviceSearch.RssiCallback mRssiCallback = new MultiDeviceSearch.RssiCallback() {
         /**
          * Receive an RSSI data update from a specific found device
          */
         @Override
-        public void onRssiUpdate(final int resultId, final int rssi)
-        {
-            runOnUiThread(new Runnable()
-            {
+        public void onRssiUpdate(final int resultId, final int rssi) {
+            runOnUiThread(new Runnable() {
                 @Override
-                public void run()
-                {
-                    for (MultiDeviceSearchResultWithRSSI result : mFoundDevices)
-                    {
-                        if (result.mDevice.resultID == resultId)
-                        {
+                public void run() {
+                    for (MultiDeviceSearchResultWithRSSI result : mFoundDevices) {
+                        if (result.mDevice.resultID == resultId) {
                             result.mRSSI = rssi;
                             mFoundAdapter.notifyDataSetChanged();
 

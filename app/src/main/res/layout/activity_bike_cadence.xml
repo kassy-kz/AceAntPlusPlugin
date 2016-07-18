@@ -29,7 +29,6 @@ All rights reserved.
 	         android:text="[status]"
 	         android:textAppearance="?android:attr/textAppearanceMedium"
 	         android:textStyle="italic" />
-
     </LinearLayout>
 
     
