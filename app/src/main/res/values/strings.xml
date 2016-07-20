@@ -20,5 +20,7 @@
     <string name="label_selectAll">Select All</string>
     <string name="label_foundDevices">Devices Found In Scan:</string>
     <string name="label_RSSI">RSSI: </string>
+    <string name="pref_heartrate_device_id">pref_heartrate_devie_id</string>
+    <string name="pref_cadence_device_id">pref_cadence_device_id</string>
 
 </resources>

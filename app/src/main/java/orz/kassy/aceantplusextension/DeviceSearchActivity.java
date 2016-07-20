@@ -40,12 +40,18 @@ import orz.kassy.aceantplusextension.antplus.HeartrateTestService;
  */
 public class DeviceSearchActivity extends Activity {
 
-    public static final String EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT = "com.dsi.ant.antplus.pluginsampler.multidevicesearch.result";
-
+    public static final String EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT = "ex_key_search_result";
     public static final String INTENT_EX_DEVICE_TYPE = "intent_ex_device_type";
     public static final String BUNDLE_KEY_DEVICE_TYPE = "bundle_key_device_type";
+    public static final String INTENT_EX_RESULT_DEVICE = "intent_ex_result_device";
+    public static final int REQUEST_CODE_SEARCH_DEVICE = 1;
+    public static final int RESULT_CODE_SEARCH_DEVICE = 2;
 
-    public static final int RESULT_SEARCH_STOPPED = RESULT_FIRST_USER;
+    public static final int DEVICE_TYPE_HEARTRATE = 1;
+    public static final int DEVICE_TYPE_SPD       = 2;
+    public static final int DEVICE_TYPE_SPDCAD    = 3;
+    public static final int DEVICE_TYPE_CADENCE   = 4;
+
 
     Context mContext;
     TextView mStatus;
@@ -60,6 +66,10 @@ public class DeviceSearchActivity extends Activity {
 
     MultiDeviceSearch mSearch;
 
+    /**
+     * onCreate
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +86,7 @@ public class DeviceSearchActivity extends Activity {
         mFoundDevicesList.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                launchConnection(mFoundAdapter.getItem(position).mDevice);
+                selectDevice(mFoundAdapter.getItem(position).mDevice);
             }
         });
 
@@ -88,57 +98,63 @@ public class DeviceSearchActivity extends Activity {
         mConnectedDevicesList.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                launchConnection(mConnectedAdapter.getItem(position).mDevice);
+                selectDevice(mConnectedAdapter.getItem(position).mDevice);
             }
         });
 
         Intent i = getIntent();
         Bundle args = i.getBundleExtra(INTENT_EX_DEVICE_TYPE);
         EnumSet<DeviceType> devices = (EnumSet<DeviceType>) args.getSerializable(BUNDLE_KEY_DEVICE_TYPE);
-
-        // start the multi-device search
         mSearch = new MultiDeviceSearch(this, devices, mCallback, mRssiCallback);
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        // close and clean-up the multi-device search
+    protected void onPause() {
+        super.onPause();
         mSearch.close();
     }
 
-    public void launchConnection(MultiDeviceSearchResult result) {
-        Class activity = null;
+    /**
+     * ListItemを選択
+     * Resultを返して本Activity終了
+     * @param result
+     */
+    public void selectDevice(MultiDeviceSearchResult result) {
         switch (result.getAntDeviceType()) {
-            case BIKE_CADENCE:
-                activity = Activity_BikeCadenceSampler.class;
-                break;
-            case BIKE_SPD:
-                activity = Activity_BikeSpeedDistanceSampler.class;
-                break;
-            case BIKE_SPDCAD:
-                activity = Activity_BikeSpeedDistanceSampler.class;
-                // could also start with Activity_BikeCadenceSampler
-                // need to request access through both, but best practice is to request one after another
-                break;
-            case HEARTRATE: {
-//                activity = Activity_HeartRateDisplay.class;
-                Intent intent = new Intent(this, HeartrateTestService.class);
-                intent.putExtra(EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT, result);
-                startService(intent);
+            case BIKE_CADENCE: {
+                Intent data = new Intent();
+                data.putExtra(INTENT_EX_DEVICE_TYPE, DEVICE_TYPE_CADENCE);
+                data.putExtra(INTENT_EX_RESULT_DEVICE, result);
+                setResult(RESULT_CODE_SEARCH_DEVICE, data);
+                finish();
                 break;
             }
-            case UNKNOWN:
+            case BIKE_SPD: {
+                Intent data = new Intent();
+                data.putExtra(INTENT_EX_DEVICE_TYPE, DEVICE_TYPE_SPD);
+                data.putExtra(INTENT_EX_RESULT_DEVICE, result);
+                setResult(RESULT_CODE_SEARCH_DEVICE, data);
+                finish();
                 break;
+            }
+            case BIKE_SPDCAD: {
+                Intent data = new Intent();
+                data.putExtra(INTENT_EX_DEVICE_TYPE, DEVICE_TYPE_SPDCAD);
+                data.putExtra(INTENT_EX_RESULT_DEVICE, result);
+                setResult(RESULT_CODE_SEARCH_DEVICE, data);
+                finish();
+                break;
+            }
+            case HEARTRATE: {
+                Intent data = new Intent();
+                data.putExtra(INTENT_EX_DEVICE_TYPE, DEVICE_TYPE_HEARTRATE);
+                data.putExtra(INTENT_EX_RESULT_DEVICE, result);
+                setResult(RESULT_CODE_SEARCH_DEVICE, data);
+                finish();
+                break;
+            }
             default:
                 break;
-        }
-        if (activity != null) {
-            Intent intent = new Intent(this, activity);
-            intent.putExtra(EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT, result);
-            startActivity(intent);
-            finish();
         }
     }
 
@@ -191,7 +207,7 @@ public class DeviceSearchActivity extends Activity {
         public void onSearchStopped(RequestAccessResult reason) {
             Intent result = new Intent();
             result.putExtra(EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT, reason.getIntValue());
-            setResult(RESULT_SEARCH_STOPPED, result);
+            setResult(REQUEST_CODE_SEARCH_DEVICE, result);
             finish();
         }
 
