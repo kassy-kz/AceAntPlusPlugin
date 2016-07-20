@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import orz.kassy.aceantplusextension.antplus.Activity_MultiDeviceSearchSampler.MultiDeviceSearchResultWithRSSI;
+import orz.kassy.aceantplusextension.MultiDeviceSearchResultWithRSSI;
 import java.util.ArrayList;
 
 import orz.kassy.aceantplusextension.R;

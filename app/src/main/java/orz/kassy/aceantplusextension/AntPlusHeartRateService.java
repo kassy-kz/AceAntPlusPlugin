@@ -3,6 +3,7 @@ package orz.kassy.aceantplusextension;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.eaglesakura.andriders.plugin.AcePluginService;
 import com.eaglesakura.andriders.plugin.Category;
@@ -18,6 +19,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class AntPlusHeartRateService extends Service implements AcePluginService {
+    private static final String TAG = "AntPluginService";
+
     public AntPlusHeartRateService() {
     }
 
@@ -49,6 +52,7 @@ public class AntPlusHeartRateService extends Service implements AcePluginService
             public void run() {
                 Date date = new Date();
                 centralDataExtension.setHeartrate(date.getSeconds());
+                Log.i(TAG, "dummy heart rate : " + date.getSeconds());
             }
         }, 1000, 1000);
     }

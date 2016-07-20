@@ -5,8 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-
-import butterknife.OnClick;
 import orz.kassy.aceantplusextension.antplus.Activity_BikeCadenceSampler;
 import orz.kassy.aceantplusextension.antplus.Activity_BikeSpeedDistanceSampler;
 import orz.kassy.aceantplusextension.antplus.Activity_HeartRateDisplay;

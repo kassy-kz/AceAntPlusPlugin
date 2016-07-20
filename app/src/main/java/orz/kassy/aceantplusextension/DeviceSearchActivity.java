@@ -7,7 +7,7 @@ Copyright (c) Dynastream Innovations Inc. 2014
 All rights reserved.
  */
 
-package orz.kassy.aceantplusextension.antplus;
+package orz.kassy.aceantplusextension;
 
 import android.app.Activity;
 import android.content.Context;
@@ -26,21 +26,25 @@ import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType;
 import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult;
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult;
 
-import orz.kassy.aceantplusextension.MultiDeviceSearchResultWithRSSI;
-import orz.kassy.aceantplusextension.R;
-
 import java.util.ArrayList;
 import java.util.EnumSet;
+
+import orz.kassy.aceantplusextension.antplus.Activity_BikeCadenceSampler;
+import orz.kassy.aceantplusextension.antplus.Activity_BikeSpeedDistanceSampler;
+import orz.kassy.aceantplusextension.antplus.ArrayAdapter_MultiDeviceSearchResult;
+import orz.kassy.aceantplusextension.antplus.HeartrateTestService;
 
 /**
  * Searches for multiple devices on the same channel using the multi-device
  * search interface
  */
-public class Activity_MultiDeviceSearchSampler extends Activity {
+public class DeviceSearchActivity extends Activity {
 
     public static final String EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT = "com.dsi.ant.antplus.pluginsampler.multidevicesearch.result";
-    public static final String BUNDLE_KEY = "com.dsi.ant.antplus.pluginsampler.multidevicesearch.bundle";
-    public static final String FILTER_KEY = "com.dsi.ant.antplus.pluginsampler.multidevicesearch.filter";
+
+    public static final String INTENT_EX_DEVICE_TYPE = "intent_ex_device_type";
+    public static final String BUNDLE_KEY_DEVICE_TYPE = "bundle_key_device_type";
+
     public static final int RESULT_SEARCH_STOPPED = RESULT_FIRST_USER;
 
     Context mContext;
@@ -89,9 +93,8 @@ public class Activity_MultiDeviceSearchSampler extends Activity {
         });
 
         Intent i = getIntent();
-        Bundle args = i.getBundleExtra(BUNDLE_KEY);
-        @SuppressWarnings("unchecked")
-        EnumSet<DeviceType> devices = (EnumSet<DeviceType>) args.getSerializable(FILTER_KEY);
+        Bundle args = i.getBundleExtra(INTENT_EX_DEVICE_TYPE);
+        EnumSet<DeviceType> devices = (EnumSet<DeviceType>) args.getSerializable(BUNDLE_KEY_DEVICE_TYPE);
 
         // start the multi-device search
         mSearch = new MultiDeviceSearch(this, devices, mCallback, mRssiCallback);
