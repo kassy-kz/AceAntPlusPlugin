@@ -9,14 +9,15 @@ All rights reserved.
 
 package orz.kassy.aceantplusextension;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,16 +30,15 @@ import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchRe
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-import orz.kassy.aceantplusextension.antplus.Activity_BikeCadenceSampler;
-import orz.kassy.aceantplusextension.antplus.Activity_BikeSpeedDistanceSampler;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import orz.kassy.aceantplusextension.antplus.ArrayAdapter_MultiDeviceSearchResult;
-import orz.kassy.aceantplusextension.antplus.HeartrateTestService;
 
 /**
  * Searches for multiple devices on the same channel using the multi-device
  * search interface
  */
-public class DeviceSearchActivity extends Activity {
+public class DeviceSearchActivity extends AppCompatActivity {
 
     public static final String EXTRA_KEY_MULTIDEVICE_SEARCH_RESULT = "ex_key_search_result";
     public static final String INTENT_EX_DEVICE_TYPE = "intent_ex_device_type";
@@ -66,6 +66,9 @@ public class DeviceSearchActivity extends Activity {
 
     MultiDeviceSearch mSearch;
 
+    @InjectView(R.id.progressEmpty)
+    ProgressBar mProgressEmptyView;
+
     /**
      * onCreate
      * @param savedInstanceState
@@ -74,6 +77,7 @@ public class DeviceSearchActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multidevice_scan);
+        ButterKnife.inject(this);
 
         mContext = getApplicationContext();
         mStatus = (TextView) findViewById(R.id.textView_Status);
@@ -105,7 +109,7 @@ public class DeviceSearchActivity extends Activity {
         Intent i = getIntent();
         Bundle args = i.getBundleExtra(INTENT_EX_DEVICE_TYPE);
         EnumSet<DeviceType> devices = (EnumSet<DeviceType>) args.getSerializable(BUNDLE_KEY_DEVICE_TYPE);
-        mSearch = new MultiDeviceSearch(this, devices, mCallback, mRssiCallback);
+        mSearch = new MultiDeviceSearch(this, devices, mSearchCallback, mRssiCallback);
     }
 
     @Override
@@ -161,7 +165,7 @@ public class DeviceSearchActivity extends Activity {
     /**
      * Callbacks from the multi-device search interface
      */
-    private MultiDeviceSearch.SearchCallbacks mCallback = new MultiDeviceSearch.SearchCallbacks() {
+    private MultiDeviceSearch.SearchCallbacks mSearchCallback = new MultiDeviceSearch.SearchCallbacks() {
         /**
          * Called when a device is found. Display found devices in connected and
          * found lists
@@ -185,7 +189,7 @@ public class DeviceSearchActivity extends Activity {
                                     View.VISIBLE);
                             mConnectedDevicesList.setVisibility(View.VISIBLE);
                         }
-
+                        mProgressEmptyView.setVisibility(View.GONE);
                         mConnectedAdapter.add(result);
                         mConnectedAdapter.notifyDataSetChanged();
                     }
@@ -194,6 +198,7 @@ public class DeviceSearchActivity extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        mProgressEmptyView.setVisibility(View.GONE);
                         mFoundAdapter.add(result);
                         mFoundAdapter.notifyDataSetChanged();
                     }

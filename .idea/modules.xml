@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AceAntPlusExtension.iml" filepath="$PROJECT_DIR$/AceAntPlusExtension.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AceAntPlusPlugin.iml" filepath="$PROJECT_DIR$/AceAntPlusPlugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/sdk-debug/sdk-debug.iml" filepath="$PROJECT_DIR$/sdk-debug/sdk-debug.iml" />
     </modules>

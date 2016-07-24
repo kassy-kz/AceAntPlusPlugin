@@ -14,7 +14,7 @@ public class PrefUtils {
      * @param context コンテキスト
      * @return int
      */
-    public static long loadPrefHeartRateDeviceId(Context context) {
+    public static int loadPrefHeartRateDeviceId(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         int id = sharedPref.getInt(context.getResources().getString(R.string.pref_heartrate_device_id), -1);
         return id;
@@ -30,7 +30,7 @@ public class PrefUtils {
      * @param context
      * @return
      */
-    public static long loadPrefCadenceDeviceId(Context context) {
+    public static int loadPrefCadenceDeviceId(Context context) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         int id = sharedPref.getInt(context.getResources().getString(R.string.pref_cadence_device_id), -1);
         return id;

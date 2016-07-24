@@ -53,7 +53,7 @@ public class HeartrateTestService extends Service {
             releaseHandle = AntPlusHeartRatePcc.requestAccess(this, result.getAntDeviceNumber(), 0,
                     base_IPluginAccessResultReceiver, base_IDeviceStateChangeReceiver);
 //            releaseHandle = AntPlusHeartRatePcc.requestAccess(this, 23756, 0,
-//                    base_IPluginAccessResultReceiver, base_IDeviceStateChangeReceiver);
+//                    mAccessResultReceiver, mDeviceStateChangeReceiver);
             Log.i(TAG, "result : " + result.getDeviceDisplayName() + ", " + result.getAntDeviceType() + ", " + result.getAntDeviceNumber());
         } else {
             Log.w(TAG, "errorrrrrrrrrrr");
