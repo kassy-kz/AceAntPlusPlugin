@@ -58,6 +58,22 @@ public class PrefUtils {
     }
 
     /**
+     * ケイデンスセンサーのタイプを保管
+     * @param context
+     * @return
+     */
+    public static int loadPrefCadenceDeviceType(Context context) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        int id = sharedPref.getInt(context.getResources().getString(R.string.pref_cadence_device_type), -1);
+        return id;
+    }
+    public static void savePrefCadenceDeviceType(Context context, int type) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        sharedPref.edit().putInt(context.getResources().getString(R.string.pref_cadence_device_type), type).apply();
+        return;
+    }
+
+    /**
      * ハートレートモニターデバイスのNameを保管
      * @param context コンテキスト
      * @return int

@@ -56,6 +56,7 @@ public class AntPlusHeartRateService extends Service implements AcePluginService
 
     @Override
     public void onAceServiceConnected(CentralEngineConnection centralEngineConnection) {
+        Log.i(TAG, "onAceServiceConnected");
         mCentralDataExtension = centralEngineConnection.getCentralDataExtension();
         requestAccessToPcc();
     }

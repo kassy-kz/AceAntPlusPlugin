@@ -20,6 +20,15 @@
                 <action android:name="com.eaglesakura.andriders.ACTION_ACE_EXTENSION_BIND_V3"/>
             </intent-filter>
         </service>
+        <service
+            android:name=".AntPlusCadenceService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="Ant+から取得">
+            <intent-filter>
+                <action android:name="com.eaglesakura.andriders.ACTION_ACE_EXTENSION_BIND_V3"/>
+            </intent-filter>
+        </service>
 
         <activity android:name=".antplus.Activity_BikeSpeedDistanceSampler"/>
         <activity android:name=".antplus.Activity_BikeCadenceSampler"/>

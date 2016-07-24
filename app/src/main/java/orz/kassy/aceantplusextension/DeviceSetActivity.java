@@ -1,6 +1,10 @@
 package orz.kassy.aceantplusextension;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -119,6 +123,13 @@ public class DeviceSetActivity extends AppCompatActivity {
         PrefUtils.savePrefCadenceDeviceName(this, "");
     }
 
+    @OnClick(R.id.btnTestCadence)
+    public void onClickTestCadence() {
+        Log.i(TAG, "test ***** ");
+        Intent intent = new Intent(this, AntPlusCadenceService.class);
+        bindService(intent, mServiceConnection, BIND_AUTO_CREATE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -134,7 +145,8 @@ public class DeviceSetActivity extends AppCompatActivity {
             Log.i(TAG, "number : " + number);
 
             // 登録する
-            switch (data.getIntExtra(DeviceSearchActivity.INTENT_EX_DEVICE_TYPE, -1)) {
+            int deviceType = data.getIntExtra(DeviceSearchActivity.INTENT_EX_DEVICE_TYPE, -1);
+            switch (deviceType) {
                 case DeviceSearchActivity.DEVICE_TYPE_HEARTRATE: {
                     setDeviceNameText(mTxtHeartRateName, name, number);
                     PrefUtils.savePrefHeartRateDeviceId(this, result.getAntDeviceNumber());
@@ -145,6 +157,7 @@ public class DeviceSetActivity extends AppCompatActivity {
                 case DeviceSearchActivity.DEVICE_TYPE_SPDCAD:
                 case DeviceSearchActivity.DEVICE_TYPE_CADENCE: {
                     setDeviceNameText(mTxtCadenceName, name, number);
+                    PrefUtils.savePrefCadenceDeviceType(this, deviceType);
                     PrefUtils.savePrefCadenceDeviceId(this, result.getAntDeviceNumber());
                     PrefUtils.savePrefCadenceDeviceName(this, result.getDeviceDisplayName());
                     break;
@@ -152,4 +165,18 @@ public class DeviceSetActivity extends AppCompatActivity {
             }
         }
     }
+
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG, "onServiceConnected");
+
+
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            Log.i(TAG, "onServiceDisconnected");
+        }
+    };
 }
