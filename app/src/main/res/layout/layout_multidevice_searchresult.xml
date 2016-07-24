@@ -8,7 +8,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/textView_multiDeviceType"
@@ -20,7 +20,7 @@
         <TextView
             android:id="@+id/textView_multiDeviceName"
             android:text="device name"
-            android:layout_marginLeft="16dp"
+            android:layout_marginTop="12dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"

@@ -32,7 +32,6 @@ import java.util.EnumSet;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import orz.kassy.aceantplusextension.antplus.ArrayAdapter_MultiDeviceSearchResult;
 
 /**
  * Searches for multiple devices on the same channel using the multi-device
@@ -52,19 +51,17 @@ public class DeviceSearchActivity extends AppCompatActivity {
     public static final int DEVICE_TYPE_SPDCAD    = 3;
     public static final int DEVICE_TYPE_CADENCE   = 4;
 
+    private Context mContext;
+    private TextView mStatus;
 
-    Context mContext;
-    TextView mStatus;
+    private ListView mFoundDevicesList;
+    private ArrayList<MultiDeviceSearchResultWithRSSI> mFoundDevices = new ArrayList<MultiDeviceSearchResultWithRSSI>();
+    private DevieSearchAdapter mFoundAdapter;
 
-    ListView mFoundDevicesList;
-    ArrayList<MultiDeviceSearchResultWithRSSI> mFoundDevices = new ArrayList<MultiDeviceSearchResultWithRSSI>();
-    ArrayAdapter_MultiDeviceSearchResult mFoundAdapter;
-
-    ListView mConnectedDevicesList;
-    ArrayList<MultiDeviceSearchResultWithRSSI> mConnectedDevices = new ArrayList<MultiDeviceSearchResultWithRSSI>();
-    ArrayAdapter_MultiDeviceSearchResult mConnectedAdapter;
-
-    MultiDeviceSearch mSearch;
+    private ListView mConnectedDevicesList;
+    private ArrayList<MultiDeviceSearchResultWithRSSI> mConnectedDevices = new ArrayList<MultiDeviceSearchResultWithRSSI>();
+    private DevieSearchAdapter mConnectedAdapter;
+    private MultiDeviceSearch mSearch;
 
     @InjectView(R.id.progressEmpty)
     ProgressBar mProgressEmptyView;
@@ -84,7 +81,7 @@ public class DeviceSearchActivity extends AppCompatActivity {
 
         mFoundDevicesList = (ListView) findViewById(R.id.listView_FoundDevices);
 
-        mFoundAdapter = new ArrayAdapter_MultiDeviceSearchResult(this, mFoundDevices);
+        mFoundAdapter = new DevieSearchAdapter(this, mFoundDevices);
         mFoundDevicesList.setAdapter(mFoundAdapter);
 
         mFoundDevicesList.setOnItemClickListener(new OnItemClickListener() {
@@ -96,7 +93,7 @@ public class DeviceSearchActivity extends AppCompatActivity {
 
         mConnectedDevicesList = (ListView) findViewById(R.id.listView_AlreadyConnectedDevices);
 
-        mConnectedAdapter = new ArrayAdapter_MultiDeviceSearchResult(this, mConnectedDevices);
+        mConnectedAdapter = new DevieSearchAdapter(this, mConnectedDevices);
         mConnectedDevicesList.setAdapter(mConnectedAdapter);
 
         mConnectedDevicesList.setOnItemClickListener(new OnItemClickListener() {

@@ -22,5 +22,7 @@
     <string name="label_RSSI">RSSI: </string>
     <string name="pref_heartrate_device_id">pref_heartrate_devie_id</string>
     <string name="pref_cadence_device_id">pref_cadence_device_id</string>
+    <string name="pref_heartrate_device_name">pref_heartrate_devie_name</string>
+    <string name="pref_cadence_device_name">pref_cadence_device_name</string>
 
 </resources>
