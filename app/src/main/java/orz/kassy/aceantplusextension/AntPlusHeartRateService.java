@@ -21,16 +21,14 @@ import com.eaglesakura.andriders.plugin.data.CentralEngineData;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class AntPlusHeartRateService extends Service implements AcePluginService {
     private static final String TAG = "AntPluginService";
     private AntPlusHeartRatePcc mHeartRatePcc = null;
     private CentralEngineData mCentralDataExtension;
+    private PccReleaseHandle<AntPlusHeartRatePcc> mReleaseHandle;
 
     public AntPlusHeartRateService() {
     }
@@ -63,7 +61,7 @@ public class AntPlusHeartRateService extends Service implements AcePluginService
 
     @Override
     public void onAceServiceDisconnected(CentralEngineConnection centralEngineConnection) {
-
+        mReleaseHandle.close();
     }
 
     @Override
@@ -92,8 +90,7 @@ public class AntPlusHeartRateService extends Service implements AcePluginService
         }
 
         // 接続
-        PccReleaseHandle<AntPlusHeartRatePcc> releaseHandle;
-        releaseHandle = AntPlusHeartRatePcc.requestAccess(this, deviceNumber, 0, mAccessResultReceiver, mDeviceStateChangeReceiver);
+        mReleaseHandle = AntPlusHeartRatePcc.requestAccess(this, deviceNumber, 0, mAccessResultReceiver, mDeviceStateChangeReceiver);
     }
 
     protected AntPluginPcc.IPluginAccessResultReceiver<AntPlusHeartRatePcc> mAccessResultReceiver = new AntPluginPcc.IPluginAccessResultReceiver<AntPlusHeartRatePcc>() {

@@ -44,11 +44,7 @@ public class AntPlusCadenceService extends Service implements AcePluginService {
     @Override
     public IBinder onBind(Intent intent) {
         CentralEngineConnection connection = CentralEngineConnection.onBind(this, intent);
-
-        // TODO for debug
-        onAceServiceConnected(null);
-        return null;
-//        return connection.getBinder();
+        return connection.getBinder();
     }
 
     /**
@@ -81,7 +77,7 @@ public class AntPlusCadenceService extends Service implements AcePluginService {
     @Override
     public void onAceServiceConnected(CentralEngineConnection centralEngineConnection) {
         Log.i(TAG, "onAceServiceConnected");
-//        mCentralDataExtension = centralEngineConnection.getCentralDataExtension();
+        mCentralDataExtension = centralEngineConnection.getCentralDataExtension();
         requestAccessToPcc();
     }
 
